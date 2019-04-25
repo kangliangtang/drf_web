@@ -24,13 +24,35 @@
 
 
 
-def test(id):
-    print(id)
-    try:
-        n = id +''
-    except Exception:
-        pass
+# def test(id):
+#     print(id)
+#     try:
+#         n = id +''
+#     except Exception:
+#         pass
+#
+#
+# s = test(2)
+# print(s)
 
 
-s = test(2)
-print(s)
+from functools import wraps
+
+def decorator02(func):
+    @wraps(func)                          # 保持原函数名称不变
+    def wrapper():
+        print('饭前先洗手    before执行....')
+        ret = func()
+        print('饭后百步走    after执行.....')
+        return ret
+    return wrapper
+
+@decorator02
+def eat():             # 原函数
+    print('吃饭咯..    原函数running....')
+    return '好饱'
+
+# 调用原函数
+result = eat()
+print('原函数的返回值为：', result)
+print(eat.__name__)

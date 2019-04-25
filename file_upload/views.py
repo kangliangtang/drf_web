@@ -1,5 +1,6 @@
 import os
-
+import datetime
+import time
 from django.shortcuts import render
 
 from rest_framework import viewsets
@@ -18,10 +19,12 @@ class FileUplodAPIView(viewsets.ModelViewSet):
     queryset = FileModel.objects.all()
     upload_file_path = settings.UPLOAD_FILE_PATH
 
-    def create(self, request, *args, **kwargs):
+    @list_route(methods=["POST"])
+    def upload(self, request, *args, **kwargs):
         """上传文件"""
         file_obj = request.FILES.get('file', None)
         filename = file_obj.name
+        filename = '{}{}'.format(int(time.time()*10**7), filename)
         try:
             with open(self.upload_file_path + filename, 'wb') as f:
                 for chunk in file_obj.chunks():
@@ -31,7 +34,6 @@ class FileUplodAPIView(viewsets.ModelViewSet):
         else:
             FileModel.objects.create(
                 file_name=filename,
-                file=file_obj,
                 file_path=self.upload_file_path + filename
             )
         return Response({'message': 'OK'}, 200)
