@@ -10,8 +10,9 @@ from timedrf import settings
 from .serializers import UploadFileSerializer
 from .models import FileModel
 from rest_framework.decorators import list_route, detail_route
-from rest_framework.status import HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_200_OK
 from django.http.response import FileResponse
+from django.http import HttpResponseRedirect
 
 
 class FileUplodAPIView(viewsets.ModelViewSet):
@@ -36,7 +37,7 @@ class FileUplodAPIView(viewsets.ModelViewSet):
                 file_name=filename,
                 file_path=self.upload_file_path + filename
             )
-        return Response({'message': 'OK'}, 200)
+        return Response({'message': 'OK'}, HTTP_200_OK)
 
 
 class DownFileView(viewsets.ViewSet):
@@ -47,8 +48,8 @@ class DownFileView(viewsets.ViewSet):
         file_path_ = obj.file_path
         file_name = file_path_.split('/')[-1]
         with open(settings.UPLOAD_FILE_PATH + file_name, 'r', encoding='utf-8') as f:
-            file_ = f.read()
-            response = FileResponse(file_)
+            file_data = f.read()
+            response = FileResponse(file_data)
             response["content_type"] = 'application/json'
             response['Content-Disposition'] = "attachment; filename= {}".format(file_name)
             return response
