@@ -1,4 +1,6 @@
 import pytz
+from django.http import HttpResponse, HttpResponseRedirect
+
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -17,6 +19,10 @@ from django.utils.decorators import method_decorator
 logde = OperationLogDecorator()
 
 from rest_framework.pagination import PageNumberPagination
+from django.conf import settings
+from django.core.mail import send_mass_mail
+from django.core.mail import EmailMultiAlternatives, EmailMessage, BadHeaderError
+
 
 
 class LogPagination(PageNumberPagination):
@@ -65,11 +71,26 @@ class OperationLogAPIView(ListAPIView):
         return query_set
 
 
-
-
-
-
-
-
-
-
+def send_email_view(request):
+    subject = '来自leontom的测试邮件'
+    time_task_name = 'time定时'
+    task_result_code = 'run success!'
+    task_time = '60s'
+    text_content = '定时任务<{}>已执行完成，结果为<{}>,执行时间为<{}>。详细测试结果见附件'.format(time_task_name,task_result_code, task_time)
+    html_content = '<p>定时任务<strong>&lt;{}&gt;</strong>已执行完成，结果为<strong>&lt;{}&gt;</strong>,执行时间为<strong><{}></strong>。详细测试结果见附件</p>'
+    html_content = html_content.format(time_task_name, task_result_code, task_time)
+    from_email = settings.EMAIL_HOST_USER
+    to_emails = ['3161859630@qq.com', ]
+    if subject and text_content and from_email:
+        try:
+            msg = EmailMultiAlternatives(subject, text_content, from_email, to_emails)
+            msg.attach_alternative(html_content, "text/html")                              # 邮箱内容html格式
+            file_path = settings.UPLOAD_FILE_PATH + 'test.json'
+            # msg.attach(filename='test', content='file data')
+            msg.attach_file(file_path)                                                     # 添加附件
+            msg.send()                                                                     # 发送
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+        return HttpResponseRedirect('Send email success!')
+    else:
+        return HttpResponse('参数不完整')

@@ -140,3 +140,17 @@ except FileExistsError as e:
     print(e)
 except Exception as e:
     print(e)
+
+
+# 邮件发送 配置
+EMAIL_USE_TSL = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.163.com"
+EMAIL_PORT = 25
+EMAIL_HOST_USER = "tangeml@163.com"
+EMAIL_HOST_PASSWORD = '123456qwer'  # 授权码
+
+# EMAIL_HOST_USER = os.environ.get("EMAIL_SENDER")  # 帐号
+# EMAIL_HOST_PASSWORD = environ.get("EMAIL_PWD")
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

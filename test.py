@@ -130,7 +130,7 @@ from django.core.mail import send_mail
 
 mail.attch()
 
-#------------------------
+# ------------------------
 import os
 from email.mime.image import MIMEImage
 from django.conf import settings
@@ -179,5 +179,39 @@ def send_util():
     else:
         return False
 
+
+from django.core.mail import send_mass_mail
+
+message1 = ('Subject here', 'Here is the message', 'from@example.com', ['first@example.com', 'other@example.com'])
+message2 = ('Another Subject', 'Here is another message', 'from@example.com', ['second@test.com'])
+
+send_mass_mail((message1, message2), fail_silently=False)
+
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+
+from_email = settings.DEFAULT_FROM_EMAIL
+# subject 主题 content 内容 to_addr 是一个列表，发送给哪些人
+msg = EmailMultiAlternatives(subject, content, from_email, [to_addr])
+msg.content_subtype = "html"
+# 添加附件（可选）
+msg.attach_file('./twz.pdf')
+# 发送
+msg.send()
+
+
+from __future__ import unicode_literals
+
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+
+subject = '来自..'
+text_content = '这是一封重要的邮件.'
+html_content = '<p>这是一封<strong>重要的</strong>邮件.</p>'
+msg = EmailMultiAlternatives(subject, text_content, from_email, [to@youemail.com])
+
+msg.attach_alternative(html_content, "text/html")
+
+msg.send()
 
 

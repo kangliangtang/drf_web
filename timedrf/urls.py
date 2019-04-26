@@ -21,10 +21,12 @@ from django.contrib import admin
 # urlpatterns = [
 #     url(r'^admin/', admin.site.urls),
 # ]
+from apps import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('apps.urls')),
     # url(r'file/', include(file_urls.urls))
-    url(r'file/', include('file_upload.urls'))
+    url(r'file/', include('file_upload.urls')),
+    url(r'email/', views.send_email_view, name='send_email')
 ]
