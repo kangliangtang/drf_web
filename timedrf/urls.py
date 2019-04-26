@@ -28,5 +28,5 @@ urlpatterns = [
     url(r'', include('apps.urls')),
     # url(r'file/', include(file_urls.urls))
     url(r'file/', include('file_upload.urls')),
-    url(r'email/', views.send_email_view, name='send_email')
+    # url(r'email/', views.send_email_view, name='send_email')
 ]

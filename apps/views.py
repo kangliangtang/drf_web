@@ -22,7 +22,7 @@ from rest_framework.pagination import PageNumberPagination
 from django.conf import settings
 from django.core.mail import send_mass_mail
 from django.core.mail import EmailMultiAlternatives, EmailMessage, BadHeaderError
-
+from utils.email_tasks import celery_send_email_task
 
 
 class LogPagination(PageNumberPagination):
@@ -86,11 +86,17 @@ def send_email_view(request):
             msg = EmailMultiAlternatives(subject, text_content, from_email, to_emails)
             msg.attach_alternative(html_content, "text/html")                              # 邮箱内容html格式
             file_path = settings.UPLOAD_FILE_PATH + 'test.json'
+            file_path = None
             # msg.attach(filename='test', content='file data')
-            msg.attach_file(file_path)                                                     # 添加附件
-            msg.send()                                                                     # 发送
+            if file_path:
+                msg.attach_file(file_path)                                                     # 添加附件
+            msg.send()
         except BadHeaderError:
             return HttpResponse('Invalid header found.')
         return HttpResponseRedirect('Send email success!')
     else:
         return HttpResponse('参数不完整')
+
+
+# def celery_sendemail():
+#     celery_send_email_task()

@@ -18,4 +18,5 @@ router.register(r'project', views.ProjectViewSet,  base_name='project_name')
 urlpatterns = [
    url(r'^log', views.OperationLogAPIView.as_view()),
    url(r'^', include(router.urls)),
+   url(r'email/', views.send_email_view, name='send_email')
 ]
