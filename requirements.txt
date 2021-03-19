@@ -1,5 +1,5 @@
 django==1.11.11
-djangorestframework==3.6.0
+djangorestframework==3.11.2
 djangorestframework-jwt==1.11.0
 django-filter==2.1.0
 mysqlclient==1.4.2
